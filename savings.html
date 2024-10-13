@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lifeforte Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+
+  <script>
+    /////////////////////////////////////////////SESSION CHECK///////////////////////////////////////////////////
+    const uid = sessionStorage.getItem("uid");
+
+    if (uid == null) {
+      window.location.href = "./login.html";
+    }
+  </script>
+
+  <body>
+    <!--------------------------------SIDEBAR------------------------------------->
+    <section id="menu">
+      <div class="logo">
+        <img src="" alt="" srcset="" />
+        <h2>Lifeforte</h2>
+      </div>
+
+      <div class="items">
+        <li>
+          <a href="./index.html"
+            ><i class="fas fa-tachometer-alt"></i>Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="./loans.html"><i class="fas fa-landmark"></i>Loans</a>
+        </li>
+        <li>
+          <a href="./payment.html"><i class="fas fa-money-bill"></i>Payments</a>
+        </li>
+        <li class="current">
+          <a href="./savings.html"><i class="fas fa-piggy-bank"></i>Savings</a>
+        </li>
+        <li>
+          <a href="./borrowers.html"> <i class="fas fa-users"></i>Borrowers</a>
+        </li>
+
+        <li>
+          <a href="./admin.html"><i class="fas fa-user-shield"></i>Admins</a>
+        </li>
+        <li>
+          <a href="./report.html"><i class="fas fa-file-alt"></i>Report</a>
+        </li>
+        <!-- <li>
+          <a href="./branches.html"><i class="fas fa-globe"></i>Branches</a>
+        </li> -->
+        <li>
+          <a href="./capital.html"><i class="fas fa-warehouse"></i>Capital</a>
+        </li>
+        <li>
+          <a href="./expenses.html"
+            ><i class="fas fa-paper-plane"></i>Expenses</a
+          >
+        </li>
+        <li class="logout" id="logout-btn">
+          <a><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </li>
+      </div>
+    </section>
+    <!------------------------------------------------------MAIN SECTION---------------------------------------------------------------->
+    <section id="interface">
+      <div class="navigation">
+        <div class="n1">
+          <div><i id="menu-btn" class="fas fa-bars"></i></div>
+          <div class="search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="search" id="searchInput" />
+          </div>
+        </div>
+
+        <div class="profile">
+          <h3 id="adminName"></h3>
+        </div>
+      </div>
+
+      <div class="i-name">
+        <h3>Savings</h3>
+        <div>
+          <button id="withdraw-btn" class="btn-primary">
+            <i class="fas fa-minus"></i> Withdraw
+          </button>
+          <button id="adjust-btn" class="btn-primary">
+            <i class="fas fa-minus"></i> Adjust
+          </button>
+          <input type="date" name="" id="dateSearch" />
+        </div>
+      </div>
+
+      <!-- Your HTML Form -->
+
+      <!--TABLE LIST-->
+      <div class="board">
+        <table width="100%" id="borrow-table">
+          <thead>
+            <th>Borrower ID</th>
+            <th>Fullname</th>
+            <th>Amount Paid</th>
+            <th>Payment Type</th>
+            <th>Date Paid</th>
+            <th>Admin</th>
+            <th>Remarks</th>
+          </thead>
+          <tbody id="tbody1"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="modal">
+      <div class="modal-content">
+        <div class="close">+</div>
+        <form action="">
+          <h2 class="form-title"></h2>
+
+          <div class="form-control">
+            Borrower ID: <br />
+            <input type="text" name="" id="brwid" required /> <br />
+          </div>
+
+          <div class="form-control">
+            Fullname: <br />
+            <input
+              type="text"
+              name=""
+              id="fname"
+              disabled
+              style="background-color: lightgray"
+            />
+            <br />
+          </div>
+          <div class="form-control">
+            Savings Balance: <br />
+            <input
+              type="number"
+              name=""
+              id="savings"
+              disabled
+              style="background-color: lightgray"
+            />
+            <br />
+            <div class="form-control">
+              Loan Amount: <br />
+              <input
+                type="number"
+                name=""
+                id="loanAmt"
+                disabled
+                style="background-color: lightgray"
+              />
+              <br />
+            </div>
+            <div class="form-control">
+              Amount to Deduct: <br />
+              <input type="number" name="" id="withdrawAmt" required /> <br />
+            </div>
+            <div class="form-control">
+              Remarks: <br />
+              <input type="text" name="" id="remarks" required /> <br />
+            </div>
+
+            <div class="form-control">
+              <button class="btn-primary" id="withdraw" style="display: none">
+                Withdraw
+              </button>
+            </div>
+            <button class="btn-primary" id="adjust">Adjust</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+
+    <script src="./js/config.js"></script>
+    <script src="./js/logout.js"></script>
+    <script src="./js/savings.js"></script>
+
+    <script>
+      $("#menu-btn").click(function () {
+        $("#menu").toggleClass("active");
+      });
+      let checker = false;
+      let edit_checker = false;
+
+      ///////////////// ADD BORROWER MODAL TOGGLE ////////////////////
+      document
+        .querySelector("#adjust-btn")
+        .addEventListener("click", function () {
+          if (!edit_checker) {
+            document.querySelector(".modal").style.display = "flex";
+            document.getElementById("withdraw").style.display = "none";
+            document.getElementById("adjust").style.display = "block";
+            document.getElementById("form-title").innerHTML = "Adjust Savings";
+            edit_checker = true;
+          }
+        });
+      document.querySelector(".close").addEventListener("click", function () {
+        if (edit_checker) {
+          edit_checker = false;
+          document.querySelector(".modal").style.display = "none";
+        } else {
+          document.querySelector(".modal").style.display = "none";
+          edit_checker = true;
+        }
+      });
+
+      //////////////// EDIT BORROWER TOGGLE ////////////////////////////
+      document
+        .querySelector("#withdraw-btn")
+        .addEventListener("click", function () {
+          if (!edit_checker) {
+            document.getElementById("form-title").innerHTML =
+              "Withdraw Savings";
+            document.getElementById("withdraw").style.display = "block";
+            document.getElementById("adjust").style.display = "none";
+            document.querySelector(".modal").style.display = "flex";
+
+            edit_checker = true;
+          }
+        });
+    </script>
+  </body>
+</html>

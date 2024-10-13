@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lifeforte Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+
+  <script>
+    const uid = sessionStorage.getItem("uid");
+    document.getElementById("adminName").innerHTML =
+      sessionStorage.getItem("userEmail");
+    if (uid == null) {
+      window.location.href = "./login.html";
+    }
+  </script>
+  <body>
+    <section id="menu">
+      <div class="logo">
+        <img src="" alt="" srcset="" />
+        <h2>Lifeforte</h2>
+      </div>
+
+      <div class="items">
+        <li>
+          <a href="./index.html"
+            ><i class="fas fa-tachometer-alt"></i>Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="./loans.html"><i class="fas fa-landmark"></i>Loans</a>
+        </li>
+        <li>
+          <a href="./payment.html"><i class="fas fa-money-bill"></i>Payments</a>
+        </li>
+        <li>
+          <a href="./savings.html"><i class="fas fa-piggy-bank"></i>Savings</a>
+        </li>
+        <li>
+          <a href="./borrowers.html"> <i class="fas fa-users"></i>Borrowers</a>
+        </li>
+
+        <li class="current">
+          <a href="./admin.html"><i class="fas fa-user-shield"></i>Admins</a>
+        </li>
+        <li>
+          <a href="./report.html"><i class="fas fa-file-alt"></i>Report</a>
+        </li>
+
+        <li>
+          <a href="./capital.html"><i class="fas fa-warehouse"></i>Capital</a>
+        </li>
+        <li>
+          <a href="./expenses.html"
+            ><i class="fas fa-paper-plane"></i>Expenses</a
+          >
+        </li>
+        <li class="logout" id="logout-btn">
+          <a><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </li>
+      </div>
+    </section>
+
+    <section id="interface">
+      <div class="navigation">
+        <div class="n1">
+          <div><i id="menu-btn" class="fas fa-bars"></i></div>
+          <div class="search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="search" id="searchInput" />
+          </div>
+        </div>
+
+        <div class="profile">
+          <h3 id="adminName"></h3>
+        </div>
+      </div>
+
+      <div class="i-name">
+        <h3>Admin</h3>
+        <button id="modal-btn" class="btn-primary">
+          <i class="fas fa-plus"></i> Add Admin
+        </button>
+      </div>
+
+      <!--TABLE LIST-->
+      <div class="board">
+        <table width="100%" id="borrow-table">
+          <thead>
+            <th>Admins</th>
+            <th>Branch</th>
+            <th>Action</th>
+          </thead>
+          <tbody id="tbody1"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="modal">
+      <div class="modal-content">
+        <div class="close">+</div>
+        <form action="">
+          <h2 class="form-title">Add Admin</h2>
+
+          <div class="form-control">
+            Email: <br />
+            <input type="email" name="" id="email" required /> <br />
+          </div>
+          <div class="form-control" data-validate="Enter region">
+            <select class="form-control" id="branch" required></select>
+          </div>
+
+          <div class="form-control">
+            Password: <br />
+            <input type="password" name="" id="password" required /> <br />
+          </div>
+
+          <div class="form-control">
+            <button id="signup" class="btn-primary">Submit</button>
+          </div>
+        </form>
+
+        <span
+          id="error"
+          style="color: red; font-size: 12px; width: 100%"
+        ></span>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/signup.js"></script>
+    <script src="./js/logout.js"></script>
+    <script src="./js/admin.js"></script>
+    <script>
+      $("#menu-btn").click(function () {
+        $("#menu").toggleClass("active");
+      });
+      document
+        .querySelector("#modal-btn")
+        .addEventListener("click", function () {
+          document.querySelector(".modal").style.display = "flex";
+        });
+
+      document.querySelector(".close").addEventListener("click", function () {
+        document.querySelector(".modal").style.display = "none";
+      });
+    </script>
+  </body>
+</html>

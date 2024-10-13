@@ -1,0 +1,9 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "expenses": {
+      ".indexOn": "paymentDate"
+    }
+  }
+}

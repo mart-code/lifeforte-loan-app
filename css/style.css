@@ -1,0 +1,461 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque&family=Poppins:wght@300;400;700;900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  width: 100%;
+  background: #e5e7eb;
+  position: relative;
+  display: flex;
+}
+
+button {
+  padding: 4px 8px;
+  border: none;
+}
+
+.btn-primary {
+  background: #111827;
+  color: #e5e7eb;
+  padding: 8px 16px;
+  border: 1px solid #111827;
+}
+.btn-primary:hover {
+  background: transparent;
+  color: #111827;
+}
+
+#menu {
+  background: #111827;
+  width: 300px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+}
+#menu .logo {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  padding: 30px 0 0 30px;
+}
+#menu .logo img {
+  width: 40px;
+  margin-right: 15px;
+}
+#menu .items {
+  margin-top: 20px;
+  position: relative;
+}
+#menu .items .current {
+  border-left: 4px solid #fff;
+}
+#menu .items li {
+  list-style: none;
+  padding: 5px 0;
+  margin: 10px 0;
+  transition: 0.3s ease;
+}
+#menu .items li:hover {
+  background: #3a4255;
+  cursor: pointer;
+  color: #111827;
+}
+#menu .items li i {
+  color: #b1b1b1;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 14px;
+  margin: 0 10px 0 25px;
+}
+#menu .items li a {
+  text-decoration: none;
+  color: #b1b1b1;
+  font-weight: 300;
+  display: inline-block;
+  width: 100%;
+  transition: 0.3s ease;
+}
+#menu .items li a:hover {
+  color: #111827;
+}
+
+#menu .items li:hover a,
+#menu .items li:hover li {
+  color: #e5e7eb;
+}
+
+#interface {
+  width: calc(100% - 300px);
+  margin-left: 300px;
+  position: relative;
+  background-color: #e5e7eb;
+}
+#interface .navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 15px 30px;
+  border-bottom: 3px solid #b1b1b1;
+  position: fixed;
+  width: calc(100% - 300px);
+}
+#interface .navigation .search {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid #b1b1b1;
+  border-radius: 4px;
+}
+#interface .navigation .search input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+#interface .navigation .search i {
+  margin-right: 14px;
+}
+#interface .navigation .profile {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+#interface .navigation .profile i {
+  margin-right: 20px;
+  font-size: 19px;
+  font-weight: 400;
+}
+
+.n1 {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#menu-btn {
+  display: none;
+  color: #111827;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.i-name {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #3a4255;
+  padding: 30px 30px 0 30px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 70px;
+}
+.i-name select {
+  background: #111827;
+  color: #e5e7eb;
+  padding: 8px 16px;
+  border: 1px solid #111827;
+}
+
+.values {
+  padding: 30px 30px 0 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.values .val-box {
+  background: #fff;
+  width: 235px;
+  padding: 16px 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.values .val-box i {
+  font-size: 25px;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 50%;
+  text-align: center;
+  color: #fff;
+  margin-right: 15px;
+}
+.values .val-box:nth-child(1) i {
+  background: #111827;
+}
+.values .val-box:nth-child(2) i {
+  background: rgb(60, 3, 95);
+}
+.values .val-box:nth-child(3) i {
+  background: #005333;
+}
+.values .val-box:nth-child(4) i {
+  background: #c97800;
+}
+.values .val-box H3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.values .val-box span {
+  font-size: 15px;
+  color: #b1b1b1;
+}
+
+.board {
+  width: 94%;
+  margin: 30px 0 30px 30px;
+  overflow: visible;
+  background: #fff;
+  border-radius: 8px;
+}
+.board h5 {
+  font-weight: 600;
+  font-size: 14px;
+}
+.board p {
+  font-weight: 400;
+  font-size: 13px;
+  color: #b1b1b1;
+}
+.board .people {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: start;
+}
+
+table {
+  font-size: 12px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table td,
+table th {
+  padding: 6px 7px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+table th {
+  background-color: #111827;
+  color: #fff;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #b1b1b1;
+}
+
+@media (max-width: 1000px) {
+  table thead {
+    display: none;
+  }
+  table,
+  table tbody,
+  table tr,
+  table td {
+    display: block;
+    width: 100%;
+  }
+  table tr {
+    margin-bottom: 15px;
+  }
+  table td {
+    text-align: right;
+    padding-left: 50%;
+    text-align: right;
+    position: relative;
+  }
+  table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    padding-left: 15px;
+    font-weight: bold;
+    text-align: left;
+  }
+}
+.active-tab p {
+  background-color: #a8e2cc;
+  color: #005333;
+  padding: 2px 10px;
+  display: inline-block;
+  border-radius: 40px;
+}
+
+.edit a {
+  text-decoration: none;
+  font-size: 14px;
+  color: slateblue;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  #menu {
+    width: 270px;
+    position: fixed;
+    left: -270px;
+  }
+  #menu.active {
+    left: 0px;
+  }
+  #menu-btn {
+    display: initial;
+  }
+  #interface {
+    width: 100%;
+    margin-left: 0;
+    display: inline-block;
+    transition: 0.3s ease;
+  }
+  #interface .navigation {
+    width: 100%;
+  }
+  #menu.active ~ #interface {
+    width: calc(100% - 270px);
+    margin-left: 270px;
+    transition: 0.3s ease;
+  }
+  .values {
+    padding: 30px 0 30px 30px;
+    justify-content: flex-start;
+  }
+  .values .val-box {
+    margin: 16px 20px;
+    padding: 16px 20px;
+  }
+  .board {
+    width: 92%;
+    padding: 0;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+}
+@media (max-width: 477px) {
+  #interface .navigation {
+    padding: 15px;
+  }
+  #interface .navigation .search input {
+    width: 150px;
+  }
+  .i-name {
+    padding: 30px 15px 0 15px;
+  }
+  .values {
+    padding: 30px 15px 0 15px;
+  }
+  .values .val-box {
+    width: 100%;
+    margin: 8px 0;
+  }
+  .board {
+    margin: 30px 15px 30px 15px;
+  }
+}
+.modal {
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.modal .modal-content {
+  width: 400px;
+  min-height: 300px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  position: relative;
+}
+.modal .modal-content .form-title, .modal .modal-content .form-title-style {
+  width: 100%;
+  color: #e5e7eb;
+  background-color: #111827;
+  text-align: center;
+}
+.modal .modal-content .form-control {
+  margin: 10px;
+}
+.modal .modal-content .form-control input {
+  width: 100%;
+  background: #e5e7eb;
+  border: 1px solid #b1b1b1;
+}
+
+.logout {
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  width: 100%;
+}
+
+.close,
+.delete-close {
+  position: absolute;
+  top: -10px;
+  right: 14px;
+  font-size: 42px;
+  transform: rotate(45deg);
+  cursor: pointer;
+  color: #e5e7eb;
+}
+
+.expenditures {
+  width: 100%;
+  padding-left: 40px;
+  color: #111827;
+}
+.expenditures input,
+.expenditures select,
+.expenditures button {
+  margin-top: 10px;
+}
+
+.delete-modal {
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.delete-modal .delete-content {
+  width: 400px;
+  min-height: 300px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  position: relative;
+}
+.delete-modal .delete-content .form-title {
+  width: 100%;
+  color: #e5e7eb;
+  background-color: #111827;
+  text-align: center;
+}
+.delete-modal .delete-content .form-control {
+  margin: 10px;
+}
+.delete-modal .delete-content .form-control input {
+  width: 100%;
+  background: #e5e7eb;
+  border: 1px solid #b1b1b1;
+}/*# sourceMappingURL=style.css.map */

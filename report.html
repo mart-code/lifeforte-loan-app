@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lifeforte Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+
+  <script>
+    /////////////////////////////////////////////SESSION CHECK///////////////////////////////////////////////////
+    const uid = sessionStorage.getItem("uid");
+
+    if (uid == null) {
+      window.location.href = "./login.html";
+    }
+  </script>
+
+  <body>
+    <!--------------------------------SIDEBAR------------------------------------->
+    <section id="menu">
+      <div class="logo">
+        <img src="" alt="" srcset="" />
+        <h2>Lifeforte</h2>
+      </div>
+
+      <div class="items">
+        <li>
+          <a href="./index.html"
+            ><i class="fas fa-tachometer-alt"></i>Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="./loans.html"><i class="fas fa-landmark"></i>Loans</a>
+        </li>
+        <li>
+          <a href="./payment.html"><i class="fas fa-money-bill"></i>Payments</a>
+        </li>
+        <li>
+          <a href="./savings.html"><i class="fas fa-piggy-bank"></i>Savings</a>
+        </li>
+        <li>
+          <a href="./borrowers.html"> <i class="fas fa-users"></i>Borrowers</a>
+        </li>
+        
+        <li>
+          <a href="./admin.html"><i class="fas fa-user-shield"></i>Admins</a>
+        </li>
+        <li class="current">
+          <a href="./report.html"><i class="fas fa-file-alt"></i>Report</a>
+        </li>
+        <!-- <li>
+          <a href="./branches.html"><i class="fas fa-globe"></i>Branches</a>
+        </li> -->
+        <li>
+          <a href="./capital.html"><i class="fas fa-warehouse"></i>Capital</a>
+        </li>
+        <li>
+          <a href="./expenses.html"
+            ><i class="fas fa-paper-plane"></i>Expenses</a
+          >
+        </li>
+        <li class="logout" id="logout-btn">
+          <a><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </li>
+      </div>
+    </section>
+    <!------------------------------------------------------MAIN SECTION---------------------------------------------------------------->
+    <section id="interface">
+      <div class="navigation">
+        <div class="n1">
+          <div><i id="menu-btn" class="fas fa-bars"></i></div>
+          <div class="search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="search" id="" />
+          </div>
+        </div>
+
+        <div class="profile">
+          <h3 id="adminName"></h3>
+        </div>
+      </div>
+
+      <div class="i-name">
+        <h3>Finacial Report</h3>
+        <h3 id="currentBranch"></h3>
+      </div>
+
+      <!-- Your HTML Form -->
+
+      <!--TABLE LIST-->
+      <div class="board">
+        <div>
+          <h3>Credit</h3>
+          <table id="creditTable">
+            <thead>
+              <tr>
+                <!-- <th>Total Loan Fees</th> -->
+                <th>Total Loan Payment</th>
+                <th>Total Lapse Fund</th>
+                <th>Total Card Payment</th>
+                <th>Total Miscellaneous</th>
+                <th>Total Capital Added</th>
+                <th>Expected Interest</th>
+                <th>Total Savings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <!-- <td id="totalLoanFees">0</td> -->
+                <td id="totalLoanPayment">0</td>
+                <td id="totalLapseFund">0</td>
+                <td id="totalCardPayment">0</td>
+                <td id="totalMiscPayment">0</td>
+                <td id="totalCapitalAdded">0</td>
+                <td id="totalLoanInterest">0</td>
+                <td id="totalSavings">0</td>
+              </tr>
+            </tbody>
+          </table>
+          <h3>Fees</h3>
+          <table id="creditTable">
+            <thead>
+              <tr>
+                <th>Total Passbook Fees</th>
+                <th>Total Registration Fee</th>
+                <th>Total Loan Application Fee</th>
+                <th>Total Risk Management</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="totalPassbook">0</td>
+                <td id="totalRegistration">0</td>
+                <td id="totalAppFee">0</td>
+                <td id="totalRiskFee">0</td>
+             
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <h3>Debit</h3>
+          <table id="debitTable">
+            <thead>
+              <tr>
+                <th>Total Loan Disbursed</th>
+                <th>Total Expenses</th>
+                <th>Total Capital Deduct</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="totalLoanDisbursed">0</td>
+                <td id="totalExpenses">0</td>
+                <td id="totalCapitalDeduct">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <label for="selectedDate">Select Date:</label>
+          <input type="date" id="selectedDate" />
+          <button onclick="checkReport()">Check Report</button>
+        </div>
+        <br />
+
+        <!-- Monthly Report Section -->
+        <label for="selectedMonth">Select Month:</label>
+        <select id="selectedMonth">
+          <option value="1">January</option>
+          <option value="2">February</option>
+          <option value="3">March</option>
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+          <option value="8">August</option>
+          <option value="9">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+          <!-- Add options for other months -->
+        </select>
+
+        <label for="selectedYear">Select Year:</label>
+        <input
+          type="number"
+          id="selectedYear"
+          min="2000"
+          max="2099"
+          placeholder="Enter year"
+        />
+
+        <button onclick="checkMonthlyReport()">Calculate Monthly Report</button>
+        <br />
+        <br />
+        <!-- Yearly Report Section -->
+        <label for="selectedYearYearly">Select Year:</label>
+        <input
+          type="number"
+          id="selectedYearYearly"
+          min="2000"
+          max="2099"
+          placeholder="Enter year"
+        />
+
+        <button onclick="checkYearlyReport()">Calculate Yearly Report</button>
+      </div>
+      <div
+        id="fixedCapitalDisplay"
+        style="
+          text-align: center;
+          margin-top: 20px;
+          font-size: 24px;
+          font-weight: bold;
+        "
+      >
+        Net Profit: <span id="netprofit">Loading...</span> <br />
+        Net Profit without Capital Deducted:
+        <span id="netprofit2">Loading...</span>
+      </div>
+    </section>
+
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+
+    <script src="./js/config.js"></script>
+    <script src="./js/logout.js"></script>
+    <script src="./js/report.js"></script>
+
+    <script>
+      $("#menu-btn").click(function () {
+        $("#menu").toggleClass("active");
+      });
+      // document
+      //   .querySelector("#modal-btn")
+      //   .addEventListener("click", function () {
+      //     document.querySelector(".modal").style.display = "flex";
+      //   });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lifeforte Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+  <script>
+    const uid = sessionStorage.getItem("uid");
+
+    if (uid == null) {
+      window.location.href = "./login.html";
+    }
+  </script>
+  <body>
+    <section id="menu">
+      <div class="logo">
+        <img src="" alt="" srcset="" />
+        <h2>Lifeforte</h2>
+      </div>
+
+      <div class="items">
+        <li>
+          <a href="./index.html"
+            ><i class="fas fa-tachometer-alt"></i>Dashboard</a
+          >
+        </li>
+        <li class="current">
+          <a href="./loans.html"><i class="fas fa-landmark"></i>Loans</a>
+        </li>
+        <li>
+          <a href="./payment.html"><i class="fas fa-money-bill"></i>Payments</a>
+        </li>
+        <li>
+          <a href="./savings.html"><i class="fas fa-piggy-bank"></i>Savings</a>
+        </li>
+        <li>
+          <a href="./borrowers.html"> <i class="fas fa-users"></i>Borrowers</a>
+        </li>
+
+        <li>
+          <a href="./admin.html"><i class="fas fa-user-shield"></i>Admins</a>
+        </li>
+        <li>
+          <a href="./report.html"><i class="fas fa-file-alt"></i>Report</a>
+        </li>
+        <!-- <li>
+          <a href="./branches.html"><i class="fas fa-globe"></i>Branches</a>
+        </li> -->
+        <li>
+          <a href="./capital.html"><i class="fas fa-warehouse"></i>Capital</a>
+        </li>
+        <li>
+          <a href="./expenses.html"
+            ><i class="fas fa-paper-plane"></i>Expenses</a
+          >
+        </li>
+        <li class="logout" id="logout-btn">
+          <a><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </li>
+      </div>
+    </section>
+
+    <section id="interface">
+      <div class="navigation">
+        <div class="n1">
+          <div><i id="menu-btn" class="fas fa-bars"></i></div>
+          <div class="search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="search" id="searchInput" />
+          </div>
+        </div>
+
+        <div class="profile">
+          <h3 id="adminName"></h3>
+        </div>
+      </div>
+
+      <div class="i-name">
+        <h3>Loans</h3>
+        <div>
+          <button id="modal-btn" class="btn-primary">
+            <i class="fas fa-plus"></i> New Loan Application
+          </button>
+          <input type="date" name="" id="dateSearch" />
+        </div>
+      </div>
+
+      <!--TABLE LIST-->
+      <div class="board">
+        <table width="100%" id="borrow-table">
+          <thead>
+            <th>Borrower ID</th>
+            <th>Name</th>
+            <th>Loan Type</th>
+            <th>Loan Amount</th>
+            <th>Loan Interest</th>
+            <th>Loan Tenure</th>
+
+            <th>Amount Paid</th>
+            <th>Loan Issue Date</th>
+          </thead>
+          <tbody id="tbody1"></tbody>
+        </table>
+      </div>
+      <div class="i-name"><h3>Pending Payments</h3></div>
+      <div class="board">
+        <table width="100%" style="margin-top: 20px">
+          <thead style="background-color: red !important">
+            <th>Borrower ID</th>
+            <th>Name</th>
+            <th>Loan Type</th>
+            <th>Current Month</th>
+          </thead>
+          <tbody id="tbody2"></tbody>
+        </table>
+      </div>
+      <div class="i-name"><h3>Completed Payments</h3></div>
+      <div class="board">
+        <table width="100%" style="margin-top: 20px">
+          <thead style="background-color: green !important">
+            <th>Borrower ID</th>
+            <th>Name</th>
+            <th>Loan Type</th>
+            <th>Action</th>
+          </thead>
+          <tbody id="tbody3"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="modal">
+      <div class="modal-content">
+        <div class="close">+</div>
+        <form action="">
+          <h2 class="form-title">Create Loan Application</h2>
+          <div class="brw1">
+            <div class="form-control">
+              Borrower ID: <br />
+              <input type="text" name="" id="brwid" required /> <br />
+            </div>
+            <div class="form-control">
+              Fullname: <br />
+              <span id="fname"></span> <br />
+            </div>
+
+            <div class="form-control">
+              Loan Type <br />
+              <select name="" id="loan-type" required></select>
+              <br />
+            </div>
+            <div class="form-control">
+              Loan Amount: <br />
+              <input type="number" name="" id="loan-amount" required /> <br />
+            </div>
+            <div class="form-control">
+              Loan Interest(%): <br />
+              <input type="number" name="" id="loan-interest" required /> <br />
+            </div>
+            <div class="form-control">
+              Loan Tenure(in days): <br />
+              <input type="number" name="" id="loan-tenure" required /> <br />
+            </div>
+            <div class="form-control">
+              Risk Management: <br />
+              <input type="number" name="" id="risk-management" required />
+              <br />
+            </div>
+          </div>
+          <div class="brw2" style="display: none">
+            <div class="form-control">
+              Loan Application Fee: <br />
+              <input type="number" name="" id="loan-application" required />
+              <br />
+            </div>
+            <div class="form-control">
+              PassBook Fee: <br />
+              <input type="number" name="" id="passBook" required />
+              <br />
+            </div>
+            <div class="form-control">
+              Loan issue date: <br />
+              <input type="date" name="" id="loan-start" required /> <br />
+            </div>
+            <div class="form-control">
+              Loan completion date: <br />
+              <input type="date" name="" id="loan-end" required /> <br />
+            </div>
+            <div class="form-control">
+              Loan Purpose: <br />
+              <input name="" id="loan-purpose" required /><br />
+            </div>
+            <button class="btn-primary" id="calculate">Calculate</button>
+            <span id="loanValues"></span>
+            <div class="form-control">
+              <button id="loanSubmit" class="btn-primary">Submit</button>
+            </div>
+          </div>
+          <button class="btn-primary borrow-page">Next</button>
+        </form>
+      </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+
+    <script src="js/config.js"></script>
+    <script src="js/loan.js"></script>
+    <script src="./js/logout.js"></script>
+    <script>
+      let checker = false;
+
+      document
+        .querySelector(".borrow-page")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          if (!checker) {
+            document.querySelector(".brw2").style.display = "block";
+            document.querySelector(".brw1").style.display = "none";
+            document.querySelector(".borrow-page").innerHTML = "Prev";
+            checker = true;
+          } else {
+            document.querySelector(".brw1").style.display = "block";
+            document.querySelector(".brw2").style.display = "none";
+            document.querySelector(".borrow-page").innerHTML = "Next";
+            checker = false;
+          }
+        });
+
+      $("#menu-btn").click(function () {
+        $("#menu").toggleClass("active");
+      });
+      document
+        .querySelector("#modal-btn")
+        .addEventListener("click", function () {
+          document.querySelector(".modal").style.display = "flex";
+        });
+
+      document.querySelector(".close").addEventListener("click", function () {
+        document.querySelector(".modal").style.display = "none";
+      });
+    </script>
+  </body>
+</html>

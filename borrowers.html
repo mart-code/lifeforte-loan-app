@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lifeforte Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+  <script>
+    //VERIFYING LOGIN
+    const uid = sessionStorage.getItem("uid");
+    if (uid == null) {
+      window.location.href = "./login.html";
+    }
+  </script>
+  <body>
+    <section id="menu">
+      <div class="logo">
+        <img src="" alt="" srcset="" />
+        <h2>Lifeforte</h2>
+      </div>
+
+      <div class="items">
+        <li>
+          <a href="./index.html"
+            ><i class="fas fa-tachometer-alt"></i>Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="./loans.html"><i class="fas fa-landmark"></i>Loans</a>
+        </li>
+        <li>
+          <a href="./payment.html"><i class="fas fa-money-bill"></i>Payments</a>
+        </li>
+        <li>
+          <a href="./savings.html"><i class="fas fa-piggy-bank"></i>Savings</a>
+        </li>
+        <li class="current">
+          <a href="./borrowers.html"> <i class="fas fa-users"></i>Borrowers</a>
+        </li>
+        <!-- <li><i class="fas fa-globe"></i><a href="#">Region</a></li> -->
+        <li>
+          <a href="./admin.html"><i class="fas fa-user-shield"></i>Admins</a>
+        </li>
+        <li>
+          <a href="./report.html"><i class="fas fa-file-alt"></i>Report</a>
+        </li>
+        <!-- <li>
+          <a href="./branches.html"><i class="fas fa-globe"></i>Branches</a>
+        </li> -->
+        <li>
+          <a href="./capital.html"><i class="fas fa-warehouse"></i>Capital</a>
+        </li>
+        <li>
+          <a href="./expenses.html"
+            ><i class="fas fa-paper-plane"></i>Expenses</a
+          >
+        </li>
+        <li class="logout" id="logout-btn">
+          <a><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </li>
+      </div>
+    </section>
+
+    <section id="interface">
+      <!--HEADER --- SEARCH-BAR------>
+      <div class="navigation">
+        <div class="n1">
+          <div><i id="menu-btn" class="fas fa-bars"></i></div>
+          <div class="search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="search" id="searchInput" />
+          </div>
+        </div>
+
+        <div class="profile">
+          <h3 id="adminName"></h3>
+        </div>
+      </div>
+
+      <div class="i-name">
+        <h3>Borrowers</h3>
+        <button id="modal-btn" class="btn-primary">
+          <i class="fas fa-plus"></i> Add Borrower
+        </button>
+        <button id="edit-btn" class="btn-primary">
+          <i class="fas fa-plus"></i> Edit Borrower
+        </button>
+        <button id="delete-btn" class="btn-primary">
+          <i class="fas fa-plus"></i> Delete Borrower
+        </button>
+      </div>
+
+      <!--TABLE LIST-->
+      <div class="board">
+        <table width="100%" id="borrow-table">
+          <thead>
+            <th>Borrower ID</th>
+            <th>Fullname</th>
+            <th>Phone No.</th>
+            <th>Savings</th>
+            <th>Resident Address</th>
+            <th>Occupation</th>
+            <th>Gurantor's Name</th>
+            <th>Gurantor's Address</th>
+            <th>Gurantor's Phone No.</th>
+            <th>Gurantor's Occupation</th>
+          </thead>
+          <tbody id="tbody1"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="delete-modal" style="display: none">
+      <div class="delete-content">
+        <div class="delete-close">+</div>
+        <form action="">
+          <h2
+            style="
+              text-align: center;
+              color: #e5e7eb;
+              background-color: #111827;
+            "
+          >
+            Delete Borrower
+          </h2>
+
+          <div class="form-control">
+            Borrower ID: <br />
+            <input type="text" id="deleteId" required />
+          </div>
+          <button class="btn-primary" id="deleteBrw">Delete</button>
+        </form>
+      </div>
+    </div>
+
+    <!--MODAL ADD BORROWER-->
+    <div class="modal">
+      <div class="modal-content">
+        <div class="close">+</div>
+        <form action="" id="borrower-form">
+          <h2 class="form-title"></h2>
+
+          <div class="brw1">
+            <div class="form-control">
+              Borrower ID: <br />
+              <input type="text" id="brwid" style="display: none" />
+            </div>
+            <div class="form-control">
+              Fullname: <br />
+              <input type="text" name="" id="name" required /> <br />
+            </div>
+            <div class="form-control">
+              Phone No: <br />
+              <input type="tel" name="" id="phone" required /> <br />
+            </div>
+            <div class="form-control">
+              Address: <br />
+              <input type="text" name="" id="address" required /> <br />
+            </div>
+            <div class="form-control">
+              Occupation: <br />
+              <input type="text" name="" id="occupation" required /> <br />
+            </div>
+            <div class="form-control">
+              Registration Fee: <br />
+              <input type="number" name="" id="registration" required /> <br />
+            </div>
+          </div>
+
+          <div class="brw2" style="display: none">
+            <div class="form-control">
+              Guarantor's Name: <br />
+              <input type="text" name="" id="gname" required /> <br />
+            </div>
+            <div class="form-control">
+              Guarantor's Phone: <br />
+              <input type="tel" name="" id="gphone" required /> <br />
+            </div>
+            <div class="form-control">
+              Guarantor's Address: <br />
+              <input type="text" name="" id="gaddress" required /> <br />
+            </div>
+            <div class="form-control">
+              Garantor's Occupation: <br />
+              <input type="text" name="" id="goccupation" required /> <br />
+            </div>
+
+            <div class="form-control">
+              <button class="btn-primary" id="add-borrower">Submit</button>
+              <button class="btn-primary" id="update" style="display: none">
+                Update
+              </button>
+            </div>
+          </div>
+
+          <button class="btn-primary borrow-page">Next</button>
+        </form>
+      </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+
+    <script src="js/config.js"></script>
+    <script src="js/logout.js"></script>
+    <script>
+      let checker = false;
+      let edit_checker = false;
+
+      document
+        .querySelector(".borrow-page")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          if (!checker) {
+            document.querySelector(".brw2").style.display = "block";
+            document.querySelector(".brw1").style.display = "none";
+            document.querySelector(".borrow-page").innerHTML = "Prev";
+            checker = true;
+          } else {
+            document.querySelector(".brw1").style.display = "block";
+            document.querySelector(".brw2").style.display = "none";
+            document.querySelector(".borrow-page").innerHTML = "Next";
+            checker = false;
+          }
+        });
+      //////////////////MENU TOGGLE////////////////////////
+      $("#menu-btn").click(function () {
+        $("#menu").toggleClass("active");
+      });
+      ///////////////// ADD BORROWER MODAL TOGGLE ////////////////////
+      document
+        .querySelector("#modal-btn")
+        .addEventListener("click", function () {
+          document.querySelector(".form-title").innerHTML = "Add Borrower";
+          document.querySelector(".modal").style.display = "flex";
+          document.getElementById("borrower-form").reset();
+        });
+      document.querySelector(".close").addEventListener("click", function () {
+        if (edit_checker) {
+          edit_checker = false;
+          document.getElementById("add-borrower").style.display = "block";
+          document.getElementById("update").style.display = "none";
+          document.querySelector(".modal").style.display = "none";
+          document.querySelector("#brwid").style.display = "none";
+          document.querySelector(".form-title").innerHTML = "Add Borrower";
+        } else {
+          document.querySelector(".modal").style.display = "none";
+        }
+      });
+
+      //////////////// EDIT BORROWER TOGGLE ////////////////////////////
+      document
+        .querySelector("#edit-btn")
+        .addEventListener("click", function () {
+          document.getElementById("borrower-form").reset();
+          document.querySelector(".form-title").innerHTML = "Edit Borrower";
+          if (!edit_checker) {
+            document.getElementById("add-borrower").style.display = "none";
+            document.getElementById("update").style.display = "block";
+            document.querySelector(".modal").style.display = "flex";
+            document.querySelector("#brwid").style.display = "block";
+            document.querySelector(".form-title").innerHTML = "Edit Borrower";
+            edit_checker = true;
+          }
+        });
+
+      /////////////// DELETE BORROWER TOGGLE/////////////////
+      document
+        .querySelector("#delete-btn")
+        .addEventListener("click", function () {
+          document.querySelector(".delete-modal").style.display = "flex";
+        });
+
+      document
+        .querySelector(".delete-close")
+        .addEventListener("click", function () {
+          document.querySelector(".delete-modal").style.display = "none";
+        });
+    </script>
+    <script src="js/borrower.js"></script>
+  </body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lifeforte Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+
+  <body>
+    <section id="menu">
+      <div class="logo">
+        <img src="" alt="" srcset="" />
+        <h2>Lifeforte</h2>
+      </div>
+
+      <div class="items">
+        <li>
+          <a href="./index.html"
+            ><i class="fas fa-tachometer-alt"></i>Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="./loans.html"><i class="fas fa-landmark"></i>Loans</a>
+        </li>
+        <li>
+          <a href="./payment.html"><i class="fas fa-money-bill"></i>Payments</a>
+        </li>
+        <li>
+          <a href="./savings.html"><i class="fas fa-piggy-bank"></i>Savings</a>
+        </li>
+        <li>
+          <a href="./borrowers.html"> <i class="fas fa-users"></i>Borrowers</a>
+        </li>
+        <!-- <li><i class="fas fa-globe"></i><a href="#">Region</a></li> -->
+        <li>
+          <a href="./admin.html"><i class="fas fa-user-shield"></i>Admins</a>
+        </li>
+        <li>
+          <a href="./report.html"><i class="fas fa-file-alt"></i>Report</a>
+        </li>
+        <!-- <li>
+          <a href="./branches.html"><i class="fas fa-globe"></i>Branches</a>
+        </li> -->
+        <li class="current">
+          <a href="./capital.html"><i class="fas fa-warehouse"></i>Capital</a>
+        </li>
+        <li>
+          <a href="./expenses.html"
+            ><i class="fas fa-paper-plane"></i>Expenses</a
+          >
+        </li>
+        <li class="logout" id="logout-btn">
+          <a><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </li>
+      </div>
+    </section>
+
+    <section id="interface">
+      <div class="navigation">
+        <div class="n1">
+          <div><i id="menu-btn" class="fas fa-bars"></i></div>
+          <div class="search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="search" id="searchInput" />
+          </div>
+        </div>
+
+        <div class="profile">
+          <h3 id="adminName"></h3>
+        </div>
+      </div>
+
+      <div class="i-name">
+        <h3>Capital</h3>
+        <button id="capital-btn" class="btn-primary">
+          <i class="fas fa-plus"></i> Add Capital
+        </button>
+        <button id="deduct-btn" class="btn-primary">
+          <i class="fas fa-plus"></i> Deduct Capital
+        </button>
+      </div>
+
+      <div
+        id="fixedCapitalDisplay"
+        style="
+          text-align: center;
+          margin-top: 20px;
+          font-size: 24px;
+          font-weight: bold;
+        "
+      >
+        <p>Select Date:</p>
+        <input type="date" name="" id="capitalDate" />
+        <button id="capitalBtn">Check Capital</button> <br />
+
+        Capital: <span id="fixedCapitalValue">Loading...</span>
+      </div>
+
+      <!--TABLE LIST-->
+      <div class="board">
+        <table width="100%" id="borrow-table">
+          <thead>
+            <th>Action</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Remarks</th>
+          </thead>
+          <tbody id="tbody1"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- <div class="modal">
+      <div class="modal-content">
+        <div class="close">+</div>
+        <form action="">
+          <h2 class="form-title">Add Capital</h2>
+
+          <div class="form-control">
+            Amount: <br />
+            <input type="number" name="" id="capital-amt" required /> <br />
+          </div>
+
+          <div class="form-control">
+            Date Added: <br />
+            <input type="date" name="" id="capital-date" required /> <br />
+          </div>
+
+          <div class="form-control">
+            Remarks: <br />
+            <input type="text" name="" id="capital-remark" required /> <br />
+          </div>
+
+          <div class="form-control">
+            <button id="deduct" class="btn-primary" style="display: none">
+              Deduct
+            </button>
+            <button id="capital" class="btn-primary">Add</button>
+          </div>
+        </form>
+
+        <span
+          id="error"
+          style="color: red; font-size: 12px; width: 100%"
+        ></span>
+      </div>
+    </div> -->
+
+    <!-- Add Capital Modal -->
+    <div class="modal" id="addCapitalModal">
+      <div class="modal-content">
+        <div class="close">+</div>
+        <form action="">
+          <h2 class="form-title">Add Capital</h2>
+          <div class="form-control">
+            Amount: <br />
+            <input type="number" name="" id="capital-amt" required /> <br />
+          </div>
+
+          <div class="form-control">
+            Date Added: <br />
+            <input type="date" name="" id="capital-date" required /> <br />
+          </div>
+
+          <div class="form-control">
+            Remarks: <br />
+            <input type="text" name="" id="capital-remark" required /> <br />
+          </div>
+
+          <div class="form-control">
+            <button id="capital" class="btn-primary">Add</button>
+          </div>
+        </form>
+        <span
+          id="error"
+          style="color: red; font-size: 12px; width: 100%"
+        ></span>
+      </div>
+    </div>
+
+    <!-- Deduct Capital Modal -->
+    <div class="modal" id="deductCapitalModal">
+      <div class="modal-content">
+        <div class="close">+</div>
+        <form action="">
+          <h2 class="form-title">Deduct Capital</h2>
+          <div class="form-control">
+            Amount: <br />
+            <input type="number" name="" id="deduct-amt" required /> <br />
+          </div>
+
+          <div class="form-control">
+            Date Added: <br />
+            <input type="date" name="" id="deduct-date" required /> <br />
+          </div>
+
+          <div class="form-control">
+            Remarks: <br />
+            <input type="text" name="" id="deduct-remark" required /> <br />
+          </div>
+
+          <div class="form-control">
+            <button id="deduct" class="btn-primary">Deduct</button>
+          </div>
+        </form>
+        <span
+          id="error"
+          style="color: red; font-size: 12px; width: 100%"
+        ></span>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/logout.js"></script>
+    <script src="./js/capital.js"></script>
+    <script>
+      $("#menu-btn").click(function () {
+        $("#menu").toggleClass("active");
+      });
+      let checker = false;
+      // let edit_checker = false;
+
+      // function toggleModal(
+      //   show,
+      //   title,
+      //   showDeduct = false,
+      //   showCapital = false
+      // ) {
+      //   const modal = document.querySelector(".modal");
+      //   const deductBtn = document.getElementById("deduct");
+      //   const capitalBtn = document.getElementById("capital");
+      //   const formTitle = document.getElementById('form-title');
+
+      //   modal.style.display = show ? "flex" : "none";
+      //   formTitle.innerHTML = title;
+      //   deductBtn.style.display = showDeduct ? "block" : "none";
+      //   capitalBtn.style.display = showCapital ? "block" : "none";
+      // }
+
+      // document
+      //   .querySelector("#capital-btn")
+      //   .addEventListener("click", function () {
+      //     toggleModal(true, "Add Capital", false, true);
+      //   });
+
+      // document.querySelector(".close").addEventListener("click", function () {
+      //   if (edit_checker) {
+      //     edit_checker = false;
+      //     toggleModal(false);
+      //   } else {
+      //     toggleModal(false);
+      //   }
+      // });
+
+      // document
+      //   .querySelector("#deduct-btn")
+      //   .addEventListener("click", function () {
+      //     if (!edit_checker) {
+      //       toggleModal(true, "Deduct Capital", true, false);
+      //       edit_checker = true;
+      //     }
+      //   });
+
+      // Event listener for Add Capital button
+      document
+        .getElementById("capital-btn")
+        .addEventListener("click", function () {
+          document.getElementById("addCapitalModal").style.display = "flex";
+        });
+
+      // Event listener for Deduct Capital button
+      document
+        .getElementById("deduct-btn")
+        .addEventListener("click", function () {
+          document.getElementById("deductCapitalModal").style.display = "flex";
+        });
+
+      // Event listener for closing modals
+      document
+        .querySelectorAll(".modal .close")
+        .forEach(function (closeButton) {
+          closeButton.addEventListener("click", function () {
+            this.closest(".modal").style.display = "none";
+          });
+        });
+
+      const uid = sessionStorage.getItem("uid");
+      document.getElementById("adminName").innerHTML =
+        sessionStorage.getItem("userEmail");
+      if (uid == null) {
+        window.location.href = "./login.html";
+      }
+    </script>
+  </body>
+</html>
