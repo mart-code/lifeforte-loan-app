@@ -19,8 +19,7 @@ body {
   display: flex;
 }
 
-button{
-
+button {
   padding: 4px 8px;
   border: none;
 }
@@ -285,39 +284,39 @@ table tbody tr:nth-child(even) {
   background-color: $greyColor;
 }
 
-@media (max-width: 1000px) {
-  table thead {
-    display: none;
-  }
-  table,
-  table tbody,
-  table tr,
-  table td {
-    display: block;
-    width: 100%;
-  }
-  table tr {
-    margin-bottom: 15px;
-  }
+// @media (max-width: 1000px) {
+//   table thead {
+//     display: none;
+//   }
+//   table,
+//   table tbody,
+//   table tr,
+//   table td {
+//     display: block;
+//     width: 100%;
+//   }
+//   table tr {
+//     margin-bottom: 15px;
+//   }
 
-  table td {
-    text-align: right;
-    padding-left: 50%;
-    text-align: right;
-    position: relative;
-  }
+//   table td {
+//     text-align: right;
+//     padding-left: 50%;
+//     text-align: right;
+//     position: relative;
+//   }
 
-  table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 0;
-    width: 50%;
-    padding-left: 15px;
+//   table td::before {
+//     content: attr(data-label);
+//     position: absolute;
+//     left: 0;
+//     width: 50%;
+//     padding-left: 15px;
 
-    font-weight: bold;
-    text-align: left;
-  }
-}
+//     font-weight: bold;
+//     text-align: left;
+//   }
+// }
 
 // .board img{
 // width: 45px;
@@ -342,82 +341,82 @@ table tbody tr:nth-child(even) {
   font-weight: 600;
 }
 
-@media (max-width: 768px) {
-  #menu {
-    width: 270px;
-    position: fixed;
-    left: -270px;
-  }
-  #menu.active {
-    left: 0px;
-  }
-  #menu-btn {
-    display: initial;
-  }
-  #interface {
-    width: 100%;
-    margin-left: 0;
-    display: inline-block;
-    transition: 0.3s ease;
-    .navigation {
-      width: 100%;
-    }
-  }
-  #menu.active ~ #interface {
-    width: calc(100% - 270px);
-    margin-left: 270px;
-    transition: 0.3s ease;
-  }
+// @media (max-width: 768px) {
+//   #menu {
+//     width: 270px;
+//     position: fixed;
+//     left: -270px;
+//   }
+//   #menu.active {
+//     left: 0px;
+//   }
+//   #menu-btn {
+//     display: initial;
+//   }
+//   #interface {
+//     width: 100%;
+//     margin-left: 0;
+//     display: inline-block;
+//     transition: 0.3s ease;
+//     .navigation {
+//       width: 100%;
+//     }
+//   }
+//   #menu.active ~ #interface {
+//     width: calc(100% - 270px);
+//     margin-left: 270px;
+//     transition: 0.3s ease;
+//   }
 
-  .values {
-    padding: 30px 0 30px 30px;
-    justify-content: flex-start;
+//   .values {
+//     padding: 30px 0 30px 30px;
+//     justify-content: flex-start;
 
-    .val-box {
-      margin: 16px 20px;
-      padding: 16px 20px;
-    }
-  }
+//     .val-box {
+//       margin: 16px 20px;
+//       padding: 16px 20px;
+//     }
+//   }
 
-  .board {
-    width: 92%;
-    padding: 0;
-    overflow-x: auto;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-}
+//   .board {
+//     width: 92%;
+//     padding: 0;
+//     overflow-x: auto;
+//   }
+//   table {
+//     width: 100%;
+//     border-collapse: collapse;
+//   }
+// }
 
-@media (max-width: 477px) {
-  #interface .navigation {
-    padding: 15px;
+// @media (max-width: 477px) {
+//   #interface .navigation {
+//     padding: 15px;
 
-    .search {
-      input {
-        width: 150px;
-      }
-    }
-  }
+//     .search {
+//       input {
+//         width: 150px;
+//       }
+//     }
+//   }
 
-  .i-name {
-    padding: 30px 15px 0 15px;
-  }
+//   .i-name {
+//     padding: 30px 15px 0 15px;
+//   }
 
-  .values {
-    padding: 30px 15px 0 15px;
+//   .values {
+//     padding: 30px 15px 0 15px;
 
-    .val-box {
-      width: 100%;
-      margin: 8px 0;
-    }
-  }
+//     .val-box {
+//       width: 100%;
+//       margin: 8px 0;
+//     }
+//   }
 
-  .board {
-    margin: 30px 15px 30px 15px;
-  }
-}
+//   .board {
+//     margin: 30px 15px 30px 15px;
+//   }
+// }
 
 .modal {
   width: 100%;
@@ -436,7 +435,8 @@ table tbody tr:nth-child(even) {
     border-radius: 4px;
     position: relative;
 
-    .form-title, .form-title-style {
+    .form-title,
+    .form-title-style {
       width: 100%;
       color: $lightColor;
       background-color: $darkColor;

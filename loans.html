@@ -214,37 +214,7 @@
     <script src="js/loan.js"></script>
     <script src="./js/logout.js"></script>
     <script>
-      let checker = false;
 
-      document
-        .querySelector(".borrow-page")
-        .addEventListener("click", function (e) {
-          e.preventDefault();
-          if (!checker) {
-            document.querySelector(".brw2").style.display = "block";
-            document.querySelector(".brw1").style.display = "none";
-            document.querySelector(".borrow-page").innerHTML = "Prev";
-            checker = true;
-          } else {
-            document.querySelector(".brw1").style.display = "block";
-            document.querySelector(".brw2").style.display = "none";
-            document.querySelector(".borrow-page").innerHTML = "Next";
-            checker = false;
-          }
-        });
-
-      $("#menu-btn").click(function () {
-        $("#menu").toggleClass("active");
-      });
-      document
-        .querySelector("#modal-btn")
-        .addEventListener("click", function () {
-          document.querySelector(".modal").style.display = "flex";
-        });
-
-      document.querySelector(".close").addEventListener("click", function () {
-        document.querySelector(".modal").style.display = "none";
-      });
     </script>
   </body>
 </html>

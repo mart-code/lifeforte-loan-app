@@ -4,7 +4,6 @@ const region = sessionStorage.getItem("region");
 document.getElementById("adminName").innerHTML =
   sessionStorage.getItem("userEmail");
 
-
 function convertMillisecondsToDate(milliseconds) {
   const date = new Date(milliseconds);
 
@@ -177,7 +176,7 @@ document.getElementById("add-borrower").onclick = async function (e) {
         gphone,
         goccupation,
         gaddress,
-        savings:0,
+        savings: 0,
         branch,
         dateAdded,
         registration,
@@ -191,15 +190,12 @@ document.getElementById("add-borrower").onclick = async function (e) {
       branch,
     });
 
-
     alert("Borrower Added Successfully");
     window.location.href = "/borrowers.html";
     return false;
   } catch (error) {
     alert("An error occurred");
   }
-
-
 };
 
 // EDIT BORROWERS
@@ -287,7 +283,7 @@ document.getElementById("brwid").onchange = function () {
 document.getElementById("deleteBrw").onclick = function (e) {
   e.preventDefault();
   let borrower = document.getElementById("deleteId").value;
-  
+
   firebase
     .database()
     .ref("borrowers/" + borrower)

@@ -1,6 +1,64 @@
 window.onload = onLoad;
 document.getElementById("adminName").innerHTML =
   sessionStorage.getItem("userEmail");
+let checker = false;
+
+document.getElementById("brwid").onchange = function () {
+  firebase
+    .database()
+    .ref("borrowers")
+    .on("value", function (AllRecords) {
+      AllRecords.forEach(function (CurrentRecord) {
+        if (
+          CurrentRecord.val().borrowerID ==
+          document.getElementById("brwid").value
+        ) {
+          document.getElementById("fname").innerHTML = CurrentRecord.val().name;
+        }
+      });
+    });
+};
+
+document.querySelector(".borrow-page").addEventListener("click", function (e) {
+  e.preventDefault();
+  if (!checker) {
+    document.querySelector(".brw2").style.display = "block";
+    document.querySelector(".brw1").style.display = "none";
+    document.querySelector(".borrow-page").innerHTML = "Prev";
+    checker = true;
+  } else {
+    document.querySelector(".brw1").style.display = "block";
+    document.querySelector(".brw2").style.display = "none";
+    document.querySelector(".borrow-page").innerHTML = "Next";
+    checker = false;
+  }
+});
+
+$("#menu-btn").click(function () {
+  $("#menu").toggleClass("active");
+});
+document.querySelector("#modal-btn").addEventListener("click", function () {
+  document.getElementById("loanSubmit").innerHTML = "Submit";
+  document.querySelector(".form-title").innerHTML = "Create Loan Application";
+  document.querySelector(".modal").style.display = "flex";
+
+  //RESET FORMS
+  document.getElementById("brwid").value = "";
+  document.getElementById("loan-type").value = "";
+  document.getElementById("loan-amount").value = "";
+  document.getElementById("loan-interest").value = "";
+  document.getElementById("loan-tenure").value = "";
+  document.getElementById("risk-management").value = "";
+  document.getElementById("loan-application").value = "";
+  document.getElementById("passBook").value = "";
+  document.getElementById("loan-start").value = "";
+  document.getElementById("loan-end").value = "";
+  document.getElementById("loan-purpose").value = "";
+});
+
+document.querySelector(".close").addEventListener("click", function () {
+  document.querySelector(".modal").style.display = "none";
+});
 
 function onLoad() {
   getLoanStatus();
@@ -59,46 +117,122 @@ document.getElementById("loanSubmit").onclick = function (e) {
   let loanEndM = new Date(loanEnd).getTime();
   let payableTimes = (loanEndM - loanStartM) / 1814400000;
   let dateAdded = new Date().getTime();
-  firebase
-    .database()
-    .ref("loans/" + borrowerID)
-    .set({
-      name: document.getElementById("fname").innerHTML,
-      borrowerID,
-      loanType,
-      loanAmount,
-      loanStart,
-      loanEnd,
-      payableTimes,
-      loanTenure,
-      loanInterest,
-      amountPaid: 0,
-      loanPurpose,
-      branch: region,
-      dateAdded,
-      riskManagement,
-      loanApplication,
-      passBook,
-      lapseFund: 0,
-      cardIssue: 0,
-      miscellaneous: 0,
-      totalPayable: loanValues,
-    })
-    .then(() => {
-      addLoanData(
-        riskManagement,
-        passBook,
-        loanApplication,
-        Number(document.getElementById("loan-amount").value),
+  if (document.getElementById("loanSubmit").innerHTML == "Submit") {
+    firebase
+      .database()
+      .ref("loans/" + borrowerID)
+      .set({
+        name: document.getElementById("fname").innerHTML,
+        borrowerID,
+        loanType,
+        loanAmount,
         loanStart,
-        borrowerID
-      );
-      alert("Loan Recorded Added Successfully");
-      window.location.href = "/loans.html";
-    })
-    .catch((error) => {
-      alert("Error in Adding Loan, Check Values");
-    });
+        loanEnd,
+        payableTimes,
+        loanTenure,
+        loanInterest,
+        amountPaid: 0,
+        loanPurpose,
+        branch: region,
+        dateAdded,
+        riskManagement,
+        loanApplication,
+        passBook,
+        lapseFund: 0,
+        cardIssue: 0,
+        miscellaneous: 0,
+        totalPayable: loanValues,
+      })
+      .then(() => {
+        addLoanData(
+          riskManagement,
+          passBook,
+          loanApplication,
+          Number(document.getElementById("loan-amount").value),
+          loanStart,
+          borrowerID
+        );
+        alert("Loan Recorded Added Successfully");
+        window.location.href = "/loans.html";
+      })
+      .catch((error) => {
+        alert("Error in Adding Loan, Check Values");
+      });
+  } else if (document.getElementById("loanSubmit").innerHTML == "Update") {
+    // Retrieve loan data from Firebase
+    firebase
+      .database()
+      .ref("loans/" + borrowerID)
+      .once("value")
+      .then(function (snapshot) {
+        var loanData = snapshot.val();
+
+        // Populate form fields with existing data
+        document.getElementById("fname").innerHTML = loanData.name;
+        document.getElementById("loan-type").value = loanData.loanType;
+        document.getElementById("loan-amount").value = loanData.loanAmount;
+        document.getElementById("loan-interest").value = loanData.loanInterest;
+        document.getElementById("loan-tenure").value = loanData.loanTenure;
+        document.getElementById("risk-management").value =
+          loanData.riskManagement;
+        document.getElementById("loan-application").value =
+          loanData.loanApplication;
+        document.getElementById("passBook").value = loanData.passBook;
+        document.getElementById("loan-start").value = loanData.loanStart;
+        document.getElementById("loan-end").value = loanData.loanEnd;
+        document.getElementById("loan-purpose").value = loanData.loanPurpose;
+
+        // Update capitalRef associated with the borrowerId
+        var capitalRef = firebase.database().ref("capital/" + region);
+
+        // Remove existing entries for this borrowerId
+        capitalRef
+          .orderByChild("borrowerID")
+          .equalTo(borrowerID)
+          .once("value", function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+              childSnapshot.ref.remove();
+            });
+          });
+
+        // Add new entries to capitalRef
+        capitalRef.push({
+          borrowerID: borrowerID,
+          type: "riskManagement Added",
+          amount: loanData.riskManagement,
+          date: new Date(),
+          branch: region,
+          remark: `Risk Management updated from ${loanData.name}`,
+        });
+
+        capitalRef.push({
+          borrowerID: borrowerID,
+          type: "loanApplication Added",
+          amount: loanData.loanApplication,
+          date: new Date(),
+          branch: region,
+          remark: `Loan Application updated from ${loanData.name}`,
+        });
+
+        capitalRef.push({
+          borrowerID: borrowerID,
+          type: "passBook Added",
+          amount: loanData.passBook,
+          date: new Date(),
+          branch: region,
+          remark: `Passbook fee updated from ${loanData.name}`,
+        });
+
+        capitalRef.push({
+          borrowerID: borrowerID,
+          type: "loan disbursed",
+          amount: loanData.amountPaid,
+          date: new Date(),
+          branch: region,
+          remark: `Loan Disbursed updated to ${loanData.name}`,
+        });
+      });
+  }
 };
 
 // Loan calculation function
@@ -220,6 +354,7 @@ function AddLoanToTable(
 
   var td7 = document.createElement("td");
   var td8 = document.createElement("td");
+  var tdEdit = document.createElement("td");
   var tdDelete = document.createElement("td");
 
   td0.innerHTML = borrowerID;
@@ -228,18 +363,59 @@ function AddLoanToTable(
   td3.innerHTML = totalPayable;
   td4.innerHTML = loanInterest;
   td5.innerHTML = loanTenure;
-
   td7.innerHTML = amountPaid;
   td8.innerHTML = loanStart;
 
+  // Create a delete button
+  var deleteButton = document.createElement("button");
+  deleteButton.innerHTML = "Delete";
+  deleteButton.addEventListener("click", function () {
+    deleteLoanApplication(borrowerID);
+  });
+  tdDelete.appendChild(deleteButton);
 
-    // Create a delete button
-    var deleteButton = document.createElement("button");
-    deleteButton.innerHTML = "Delete";
-    deleteButton.addEventListener("click", function () {
-      deleteLoanApplication(borrowerID);
-    });
-    tdDelete.appendChild(deleteButton);
+  //create an edit button
+  let editButton = document.createElement("button");
+  editButton.innerHTML = "Edit";
+  editButton.addEventListener("click", function () {
+    document.querySelector(".modal").style.display = "flex";
+    document.getElementById("loanSubmit").innerHTML = "Update";
+    document.querySelector(".form-title").innerHTML = "Update Loan";
+    firebase
+      .database()
+      .ref("loans")
+      .once("value", function (AllRecords) {
+        AllRecords.forEach(function (CurrentRecord) {
+          if (CurrentRecord.val().borrowerID == borrowerID) {
+            document.getElementById("brwid").value =
+              CurrentRecord.val().borrowerID;
+            document.getElementById("fname").innerHTML =
+              CurrentRecord.val().name;
+            document.getElementById("loan-type").innerHTML =
+              CurrentRecord.val().loanType;
+            document.getElementById("loan-amount").value =
+              CurrentRecord.val().loanAmount;
+            document.getElementById("loan-interest").value =
+              CurrentRecord.val().loanInterest;
+            document.getElementById("loan-tenure").value =
+              CurrentRecord.val().loanTenure;
+            document.getElementById("risk-management").value =
+              CurrentRecord.val().riskManagement;
+            document.getElementById("loan-application").value =
+              CurrentRecord.val().loanApplication;
+            document.getElementById("passBook").value =
+              CurrentRecord.val().passBook;
+            document.getElementById("loan-start").value =
+              CurrentRecord.val().loanStart;
+            document.getElementById("loan-end").value =
+              CurrentRecord.val().loanEnd;
+            document.getElementById("loan-purpose").value =
+              CurrentRecord.val().loanPurpose;
+          }
+        });
+      });
+  });
+  tdEdit.appendChild(editButton);
 
   td0.setAttribute("data-label", "Borrower ID");
   td1.setAttribute("data-label", "Name");
@@ -261,6 +437,7 @@ function AddLoanToTable(
   trow.appendChild(td7);
   trow.appendChild(td8);
   trow.appendChild(tdDelete);
+  trow.appendChild(tdEdit);
   tbody.appendChild(trow);
 }
 
@@ -315,10 +492,10 @@ function deleteLoanApplication(borrowerID) {
         .orderByChild("borrowerID")
         .equalTo(borrowerID)
         .once("value")
-        .then(function(snapshot) {
+        .then(function (snapshot) {
           // Use a batch delete to remove all matching records
           const updates = {};
-          snapshot.forEach(function(childSnapshot) {
+          snapshot.forEach(function (childSnapshot) {
             updates[childSnapshot.key] = null;
           });
           return capitalRef.update(updates);
@@ -328,7 +505,9 @@ function deleteLoanApplication(borrowerID) {
           window.location = "./loans.html";
         })
         .catch((error) => {
-          alert("Error in deleting loan-related capital records, please try again.");
+          alert(
+            "Error in deleting loan-related capital records, please try again."
+          );
           console.error(error);
         });
     })
@@ -337,8 +516,6 @@ function deleteLoanApplication(borrowerID) {
       console.error(error);
     });
 }
-
-
 
 function TableLatePayment(name, borrowerID, loanType, currentMonth) {
   var tbody = document.getElementById("tbody2");
