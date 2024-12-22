@@ -1,8 +1,10 @@
 window.onload = onLoad;
 document.getElementById("adminName").innerHTML =
   sessionStorage.getItem("userEmail");
+const region = sessionStorage.getItem("region");
 let checker = false;
 
+//RETRIEVE BORROWER ON INPUT CHANGE
 document.getElementById("brwid").onchange = function () {
   firebase
     .database()
@@ -37,6 +39,8 @@ document.querySelector(".borrow-page").addEventListener("click", function (e) {
 $("#menu-btn").click(function () {
   $("#menu").toggleClass("active");
 });
+
+//LOAN FORM MODAL
 document.querySelector("#modal-btn").addEventListener("click", function () {
   document.getElementById("loanSubmit").innerHTML = "Submit";
   document.querySelector(".form-title").innerHTML = "Create Loan Application";
@@ -66,7 +70,7 @@ function onLoad() {
   SelectLoans();
   calculateLoanPayments();
 }
-const region = sessionStorage.getItem("region");
+
 let name,
   borrowerID,
   loanType,
@@ -159,96 +163,69 @@ document.getElementById("loanSubmit").onclick = function (e) {
         alert("Error in Adding Loan, Check Values");
       });
   } else if (document.getElementById("loanSubmit").innerHTML == "Update") {
-    // Retrieve loan data from Firebase
-    firebase
-      .database()
-      .ref("loans/" + borrowerID)
-      .once("value")
-      .then(function (snapshot) {
-        var loanData = snapshot.val();
-
-        // Populate form fields with existing data
-        document.getElementById("fname").innerHTML = loanData.name;
-        document.getElementById("loan-type").value = loanData.loanType;
-        document.getElementById("loan-amount").value = loanData.loanAmount;
-        document.getElementById("loan-interest").value = loanData.loanInterest;
-        document.getElementById("loan-tenure").value = loanData.loanTenure;
-        document.getElementById("risk-management").value =
-          loanData.riskManagement;
-        document.getElementById("loan-application").value =
-          loanData.loanApplication;
-        document.getElementById("passBook").value = loanData.passBook;
-        document.getElementById("loan-start").value = loanData.loanStart;
-        document.getElementById("loan-end").value = loanData.loanEnd;
-        document.getElementById("loan-purpose").value = loanData.loanPurpose;
-
-        // Update capitalRef associated with the borrowerId
-        var capitalRef = firebase.database().ref("capital/" + region);
-
-        // Remove existing entries for this borrowerId
-        capitalRef
-          .orderByChild("borrowerID")
-          .equalTo(borrowerID)
-          .once("value", function (snapshot) {
-            snapshot.forEach(function (childSnapshot) {
-              childSnapshot.ref.remove();
-            });
-          });
-
-        // Add new entries to capitalRef
-        capitalRef.push({
-          borrowerID: borrowerID,
-          type: "riskManagement Added",
-          amount: loanData.riskManagement,
-          date: new Date(),
-          branch: region,
-          remark: `Risk Management updated from ${loanData.name}`,
-        });
-
-        capitalRef.push({
-          borrowerID: borrowerID,
-          type: "loanApplication Added",
-          amount: loanData.loanApplication,
-          date: new Date(),
-          branch: region,
-          remark: `Loan Application updated from ${loanData.name}`,
-        });
-
-        capitalRef.push({
-          borrowerID: borrowerID,
-          type: "passBook Added",
-          amount: loanData.passBook,
-          date: new Date(),
-          branch: region,
-          remark: `Passbook fee updated from ${loanData.name}`,
-        });
-
-        capitalRef.push({
-          borrowerID: borrowerID,
-          type: "loan disbursed",
-          amount: loanData.amountPaid,
-          date: new Date(),
-          branch: region,
-          remark: `Loan Disbursed updated to ${loanData.name}`,
-        });
-      });
+    updateLoanData(borrowerID);
   }
 };
+
+function updateLoanData(borrowerID) {
+  // Get updated values from the DOM
+  const updatedLoanData = {
+    name: document.getElementById("fname").innerHTML,
+    loanType: document.getElementById("loan-type").value,
+    loanAmount: parseFloat(document.getElementById("loan-amount").value),
+    loanInterest: parseFloat(document.getElementById("loan-interest").value),
+    loanTenure: parseInt(document.getElementById("loan-tenure").value),
+    riskManagement: parseFloat(
+      document.getElementById("risk-management").value
+    ),
+    loanApplication: parseFloat(
+      document.getElementById("loan-application").value
+    ),
+    passBook: parseFloat(document.getElementById("passBook").value),
+    loanStart: document.getElementById("loan-start").value,
+    loanEnd: document.getElementById("loan-end").value,
+    loanPurpose: document.getElementById("loan-purpose").value,
+    totalPayable: emi(loanAmount, loanInterest),
+  };
+
+  // Reference to the loan in the database
+  const loanRef = firebase.database().ref("loans/" + borrowerID);
+
+  // Update the loan data in Firebase
+  loanRef
+    .update(updatedLoanData)
+    .then(() => {
+      editLoanData(
+        updatedLoanData.riskManagement,
+        updatedLoanData.passBook,
+        updatedLoanData.loanApplication,
+        updatedLoanData.loanAmount,
+        updatedLoanData.loanStart,
+        borrowerID
+      );
+    })
+    .then(() => {
+      console.log("Loan data updated successfully.");
+      alert("Loan data has been updated.");
+      window.location = "./loans.html";
+    })
+    .catch((error) => {
+      console.error("Error updating loan data:", error);
+      alert("An error occurred while updating loan data.");
+    });
+}
 
 // Loan calculation function
 function emi(loanAmount, interestRate) {
   const totalPayment =
     Number(loanAmount) +
     parseFloat(Number(loanAmount) * Number(interestRate / 100));
-
-  // Calculate total payment
-
   return totalPayment;
 }
 
+//Calculate Payable Loam
 document.getElementById("calculate").onclick = function (e) {
   e.preventDefault();
-
   Ready();
   firebase
     .database()
@@ -263,12 +240,11 @@ document.getElementById("calculate").onclick = function (e) {
   ).innerHTML = `Total Payable: ${loanValues} <br>`;
 };
 
+//SELECT LOANS AND SORT IN TABLE
 function SelectLoans() {
   const tableBody = document.getElementById("tbody1");
-
   // Clear existing table rows
   tableBody.innerHTML = "";
-
   firebase
     .database()
     .ref("loans")
@@ -318,6 +294,7 @@ function SelectLoans() {
     });
 }
 
+//Search Feature
 function filterTable(query) {
   const table = document.getElementById("tbody1");
   const rows = table.getElementsByTagName("tr");
@@ -441,6 +418,7 @@ function AddLoanToTable(
   tbody.appendChild(trow);
 }
 
+//COMPLETED LOANS TABLE
 function TableCompletedPayment(name, borrowerID, loanType) {
   var tbody = document.getElementById("tbody3");
 
@@ -476,6 +454,8 @@ function TableCompletedPayment(name, borrowerID, loanType) {
 
   tbody.appendChild(trow);
 }
+
+//DELETE LOANS
 function deleteLoanApplication(borrowerID) {
   // Get the region from sessionStorage
   const region = sessionStorage.getItem("region");
@@ -517,6 +497,7 @@ function deleteLoanApplication(borrowerID) {
     });
 }
 
+//LATE LOANS TABLE
 function TableLatePayment(name, borrowerID, loanType, currentMonth) {
   var tbody = document.getElementById("tbody2");
 
@@ -644,6 +625,61 @@ function addLoanData(
     date,
     branch: region,
     remark: `loan Disbursed to ${name}`,
+  });
+}
+
+//Edit Loan data
+function editLoanData(
+  passBook,
+  riskManagement,
+  loanApplication,
+  loanDisbursed,
+  date,
+  borrowerID
+) {
+  const capitalRef = firebase.database().ref("capital/" + region);
+  const updates = [
+    {
+      type: "riskManagement Added",
+      amount: riskManagement,
+      remark: `riskManagement updated for ${borrowerID}`,
+    },
+    {
+      type: "loanApplication Added",
+      amount: loanApplication,
+      remark: `loanApplication updated for ${borrowerID}`,
+    },
+    {
+      type: "passBook Added",
+      amount: passBook,
+      remark: `passBook fee updated for ${borrowerID}`,
+    },
+    {
+      type: "loan disbursed",
+      amount: loanDisbursed,
+      remark: `loan Disbursed updated for ${borrowerID}`,
+    },
+  ];
+
+  updates.forEach(({ type, amount, remark }) => {
+    capitalRef
+      .orderByChild("borrowerID")
+      .equalTo(borrowerID)
+      .once("value", function (snapshot) {
+        let found = false;
+        snapshot.forEach(function (childSnapshot) {
+          const data = childSnapshot.val();
+          if (data.type === type) {
+            found = true;
+            // Update the existing record
+            childSnapshot.ref.update({
+              amount,
+              date,
+              remark,
+            });
+          }
+        });
+      });
   });
 }
 

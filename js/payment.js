@@ -3,8 +3,20 @@ function loading() {
   getPayments();
 }
 
-//GLOBAL VARIABLES
+$("#menu-btn").click(function () {
+  $("#menu").toggleClass("active");
+});
+document.querySelector("#modal-btn").addEventListener("click", function () {
+  document.querySelector(".modal").style.display = "flex";
+  document.getElementById("payment-submit").innerHTML = "Submit";
+  document.querySelector(".form-title").innerHTML = "Make Payment";
+});
 
+document.querySelector(".close").addEventListener("click", function () {
+  document.querySelector(".modal").style.display = "none";
+});
+
+//GLOBAL VARIABLES
 const region = sessionStorage.getItem("region");
 const branch = sessionStorage.getItem("region");
 const userEmail = sessionStorage.getItem("userEmail");
@@ -13,7 +25,14 @@ document.getElementById("adminName").innerHTML =
   sessionStorage.getItem("userEmail");
 
 var name;
-let borrowerID, paymentType, paymentDate, amountPaid, admin, paymentTime;
+let borrowerID,
+  paymentType,
+  paymentDate,
+  amountPaid,
+  admin,
+  prevAmountValue,
+  paymentTime,
+  prevPaymentTime;
 
 function Ready() {
   borrowerID = document.getElementById("brwid").value;
@@ -27,35 +46,74 @@ document.getElementById("payment-submit").onclick = function (e) {
   e.preventDefault();
 
   Ready();
-  
-  if (window.confirm("Are you sure?")) {
-    firebase
-      .database()
-      .ref("borrowers/" + borrowerID)
-      .once("value", (snapshot) => {
-        const name = snapshot.val().name; // Get the name
-        
-        if (paymentType === "savings") {
-          updateSavings(borrowerID, amountPaid).then(() =>
-            setPaymentRecord(name)
-          );
-        } else if (paymentType === "loan-payment") {
-          updateAmountPaid(borrowerID, amountPaid).then(() =>
-            setPaymentRecord(name)
-          );
-        } else if (paymentType === "lapse-fund") {
-          lapseFundPayment(borrowerID, amountPaid).then(() =>
-            setPaymentRecord(name)
-          );
-        } else if (paymentType === "miscellaneous") {
-          miscellaneous(borrowerID, amountPaid).then(() =>
-            setPaymentRecord(name)
-          );
-        } else if (paymentType === "card-issue") {
-          cardIssue(borrowerID, amountPaid).then(() => setPaymentRecord(name));
-        }
-        // Now that you have the name, proceed to set the payment records
-      });
+
+  if (document.getElementById("payment-submit").innerHTML == "Submit") {
+    if (window.confirm("Are you sure?")) {
+      firebase
+        .database()
+        .ref("borrowers/" + borrowerID)
+        .once("value", (snapshot) => {
+          const name = snapshot.val().name; // Get the name
+
+          if (paymentType === "savings") {
+            updateSavings(borrowerID, amountPaid).then(() =>
+              setPaymentRecord(name)
+            );
+          } else if (paymentType === "loan-payment") {
+            updateAmountPaid(borrowerID, amountPaid).then(() =>
+              setPaymentRecord(name)
+            );
+          } else if (paymentType === "lapse-fund") {
+            lapseFundPayment(borrowerID, amountPaid).then(() =>
+              setPaymentRecord(name)
+            );
+          } else if (paymentType === "miscellaneous") {
+            miscellaneous(borrowerID, amountPaid).then(() =>
+              setPaymentRecord(name)
+            );
+          } else if (paymentType === "card-issue") {
+            cardIssue(borrowerID, amountPaid).then(() =>
+              setPaymentRecord(name)
+            );
+          }
+        });
+    }
+  } else if (document.getElementById("payment-submit").innerHTML == "Update") {
+    if (window.confirm("Are you sure?")) {
+      firebase
+        .database()
+        .ref("borrowers/" + borrowerID)
+        .once("value", (snapshot) => {
+          const name = snapshot.val().name; // Get the name
+
+          if (paymentType === "savings") {
+            editSavings(borrowerID, amountPaid).then(() => {
+              deletePaymentRecord(prevPaymentTime);
+              setPaymentRecord(name);
+            });
+          } else if (paymentType === "loan-payment") {
+            editAmountPaid(borrowerID, amountPaid).then(() => {
+              deletePaymentRecord(prevPaymentTime);
+              setPaymentRecord(name);
+            });
+          } else if (paymentType === "lapse-fund") {
+            editlapseFund(borrowerID, amountPaid).then(() => {
+              deletePaymentRecord(prevPaymentTime);
+              setPaymentRecord(name);
+            });
+          } else if (paymentType === "miscellaneous") {
+            editMisc(borrowerID, amountPaid).then(() => {
+              deletePaymentRecord(prevPaymentTime);
+              setPaymentRecord(name);
+            });
+          } else if (paymentType === "card-issue") {
+            editCardIssue(borrowerID, amountPaid).then(() => {
+              deletePaymentRecord(prevPaymentTime);
+              setPaymentRecord(name);
+            });
+          }
+        });
+    }
   }
 };
 
@@ -131,7 +189,6 @@ function getPayments() {
             paymentTime,
           });
         }
-        
       });
 
       // Reverse the order of paymentRecords array
@@ -195,7 +252,20 @@ function AddItemsToTable(
   var td4 = document.createElement("td");
   var td5 = document.createElement("td");
   var td6 = document.createElement("td");
+  var tdEdit = document.createElement("td");
+  let editButton = document.createElement("button");
 
+  editButton.innerHTML = "Edit";
+  editButton.addEventListener("click", function () {
+    document.querySelector(".modal").style.display = "flex";
+    document.getElementById("payment-submit").innerHTML = "Update";
+    document.querySelector(".form-title").innerHTML = "Update Payment";
+    document.getElementById("payment-type").value = paymentType;
+    document.getElementById("brwid").value = borrowerID;
+    document.getElementById("payment-amount").value = amountPaid;
+    prevAmountValue = amountPaid;
+    prevPaymentTime = paymentTime;
+  });
   // Create delete button
   var deleteButton = document.createElement("button");
   deleteButton.innerHTML = "Delete";
@@ -215,6 +285,7 @@ function AddItemsToTable(
   td4.innerHTML = paymentDate;
   td5.innerHTML = admin;
   td6.innerHTML = paymentTime;
+  tdEdit.appendChild(editButton);
   // td7.appendChild(deleteButton);
 
   td0.setAttribute("data-label", "Borrower ID");
@@ -234,7 +305,7 @@ function AddItemsToTable(
   trow.appendChild(td5);
   trow.appendChild(td6);
   trow.appendChild(td7);
-
+  trow.appendChild(tdEdit);
   tbody.appendChild(trow);
 }
 
@@ -319,8 +390,6 @@ async function updateAmountPaid(borrowerID, amountPaid) {
       .database()
       .ref("loans/" + borrowerID)
       .update({ amountPaid: updatedAmountPaid, totalPayable: loanAmt });
-
-    
   } catch (error) {
     console.error("Error in updateAmountPaid:", error);
     throw error; // Rethrow the error to handle it in the calling code
@@ -349,8 +418,6 @@ async function lapseFundPayment(borrowerID, amountPaid) {
       .database()
       .ref("loans/" + borrowerID)
       .update({ lapseFund: updatedAmountPaid });
-
-    
   } catch (error) {
     console.error("Error in lapseFundPayment:", error);
     throw error; // Rethrow the error to handle it in the calling code
@@ -404,8 +471,6 @@ async function cardIssue(borrowerID, amountPaid) {
       .database()
       .ref("loans/" + borrowerID)
       .update({ cardIssue: updatedAmountPaid });
-
-    
   } catch (error) {
     console.error("Error in cardIssue:", error);
     throw error; // Rethrow the error to handle it in the calling code
@@ -456,8 +521,210 @@ async function miscellaneous(borrowerID, amountPaid) {
       .database()
       .ref("loans/" + borrowerID)
       .update({ miscellaneous: updatedAmountPaid });
+  } catch (error) {
+    console.error("Error in miscellaneous:", error);
+    throw error; // Rethrow the error to handle it in the calling code
+  }
+}
+// EDIT SAVINGS
+function editSavings(borrowerID, amountPaid) {
+  return new Promise((resolve, reject) => {
+    firebase
+      .database()
+      .ref("borrowers/" + borrowerID)
+      .once("value")
+      .then(function (snapshot) {
+        const borrower = snapshot.val();
+        if (!borrower) {
+          console.error(
+            "Borrower data not found for borrowerID: " + borrowerID
+          );
+          reject("Borrower data not found");
+          return;
+        }
 
-    
+        const prevSavings = borrower.savings || 0; // Ensure a default value if savings doesn't exist
+        const updatedSavings =
+          Number(prevSavings) + Number(amountPaid) - Number(prevAmountValue);
+
+        firebase
+          .database()
+          .ref("borrowers/" + borrowerID)
+          .update({ savings: updatedSavings })
+          .then(() => {
+            resolve();
+          })
+          .catch((error) => {
+            console.error("Error updating savings:", error);
+            reject("Error updating savings");
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching borrower data:", error);
+        reject("Error fetching borrower data");
+      });
+  });
+}
+
+// UPDATE LOAN REPAYMENT
+async function editAmountPaid(borrowerID, amountPaid) {
+  try {
+    const loanSnapshot = await firebase
+      .database()
+      .ref("loans/" + borrowerID)
+      .once("value");
+
+    const loan = loanSnapshot.val();
+
+    if (!loan) {
+      throw new Error("Loan data not found for borrowerID: " + borrowerID);
+    }
+
+    const prevAmountPaid = Number(loan.amountPaid) || 0;
+    const updatedAmountPaid =
+      prevAmountPaid + Number(amountPaid) - Number(prevAmountValue);
+    const loanAmt =
+      Number(loan.totalPayable) - Number(amountPaid) + Number(prevAmountValue);
+
+    // Update AmountPaid and Remaining TotalPayable
+    await firebase
+      .database()
+      .ref("loans/" + borrowerID)
+      .update({ amountPaid: updatedAmountPaid, totalPayable: loanAmt });
+  } catch (error) {
+    console.error("Error in updateAmountPaid:", error);
+    throw error; // Rethrow the error to handle it in the calling code
+  }
+}
+
+// LAPSEFUND PAYMENT
+async function editlapseFund(borrowerID, amountPaid) {
+  try {
+    const loanSnapshot = await firebase
+      .database()
+      .ref("loans/" + borrowerID)
+      .once("value");
+
+    const loan = loanSnapshot.val();
+
+    if (!loan) {
+      throw new Error("Loan data not found for borrowerID: " + borrowerID);
+    }
+
+    const prevAmountPaid = Number(loan.lapseFund) || 0;
+    const updatedAmountPaid =
+      prevAmountPaid + Number(amountPaid) - Number(prevAmountValue);
+
+    // Update LapseFund for Borrower
+    await firebase
+      .database()
+      .ref("loans/" + borrowerID)
+      .update({ lapseFund: updatedAmountPaid });
+  } catch (error) {
+    console.error("Error in lapseFundPayment:", error);
+    throw error; // Rethrow the error to handle it in the calling code
+  }
+}
+
+// CARD ISSUE PAYMENT
+async function editCardIssue(borrowerID, amountPaid) {
+  try {
+    const borrowerSnapshot = await firebase
+      .database()
+      .ref("loans/" + borrowerID)
+      .once("value");
+
+    const loan = borrowerSnapshot.val();
+
+    if (!loan) {
+      throw new Error("Borrower data not found for borrowerID: " + borrowerID);
+    }
+
+    const prevAmountPaid = Number(loan.cardIssue) || 0;
+    const updatedAmountPaid =
+      prevAmountPaid + Number(amountPaid) - Number(prevAmountValue);
+
+    // Add Card Issue Payment to Capital
+    const fixedSnapshot = await fixedCapitalRef.once("value");
+    const prevFixedCapital = fixedSnapshot.val() || 0;
+    const newFixedCapital = prevFixedCapital + Number(amountPaid);
+    await fixedCapitalRef.set(newFixedCapital);
+
+    const currentDate = convertMillisecondsToDate(new Date());
+
+    // Retrieve previous capital
+    const dailyCapitalSnapshot = await firebase
+      .database()
+      .ref("dailyCapital/" + branch + "/" + currentDate)
+      .once("value");
+
+    const prevCapital = dailyCapitalSnapshot.val() || 0;
+
+    // Add the amount
+    const newAmount = prevCapital + Number(amountPaid);
+
+    // Update dailyCapital
+    await firebase
+      .database()
+      .ref("dailyCapital/" + branch + "/" + currentDate)
+      .set(newAmount);
+
+    // Update Card Issue for borrower
+    await firebase
+      .database()
+      .ref("loans/" + borrowerID)
+      .update({ cardIssue: updatedAmountPaid });
+  } catch (error) {
+    console.error("Error in cardIssue:", error);
+    throw error; // Rethrow the error to handle it in the calling code
+  }
+}
+
+async function editMisc(borrowerID, amountPaid) {
+  try {
+    const loanSnapshot = await firebase
+      .database()
+      .ref("loans/" + borrowerID)
+      .once("value");
+    const loan = loanSnapshot.val();
+
+    if (!loan) {
+      throw new Error("Borrower data not found for borrowerID: " + borrowerID);
+    }
+
+    const prevAmountPaid = Number(loan.miscellaneous) || 0;
+    const updatedAmountPaid =
+      prevAmountPaid + Number(amountPaid) - Number(prevAmountValue);
+
+    // Add Loan Payment to Capital
+    const fixedSnapshot = await fixedCapitalRef.once("value");
+    const prevFixedCapital = fixedSnapshot.val() || 0;
+    const newFixedCapital = prevFixedCapital + Number(amountPaid);
+    await fixedCapitalRef.set(newFixedCapital);
+
+    const currentDate = convertMillisecondsToDate(new Date());
+
+    // Retrieve previous capital
+    const dailyCapitalSnapshot = await firebase
+      .database()
+      .ref("dailyCapital/" + branch + "/" + currentDate)
+      .once("value");
+    const prevCapital = dailyCapitalSnapshot.val() || 0;
+
+    // Add the amount
+    const newAmount = prevCapital + Number(amountPaid);
+
+    // Update dailyCapital
+    await firebase
+      .database()
+      .ref("dailyCapital/" + branch + "/" + currentDate)
+      .set(newAmount);
+
+    // Update Miscellaneous for Borrower
+    await firebase
+      .database()
+      .ref("loans/" + borrowerID)
+      .update({ miscellaneous: updatedAmountPaid });
   } catch (error) {
     console.error("Error in miscellaneous:", error);
     throw error; // Rethrow the error to handle it in the calling code
