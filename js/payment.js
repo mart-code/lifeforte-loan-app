@@ -1,4 +1,6 @@
 window.onload = loading;
+document.addEventListener("DOMContentLoaded", loading);
+
 function loading() {
   getPayments();
 }
@@ -52,7 +54,8 @@ document.getElementById("payment-submit").onclick = function (e) {
       firebase
         .database()
         .ref("borrowers/" + borrowerID)
-        .once("value", (snapshot) => {
+        .get()
+        .then((snapshot) => {
           const name = snapshot.val().name; // Get the name
 
           if (paymentType === "savings") {
@@ -83,7 +86,8 @@ document.getElementById("payment-submit").onclick = function (e) {
       firebase
         .database()
         .ref("borrowers/" + borrowerID)
-        .once("value", (snapshot) => {
+        .get()
+        .then((snapshot) => {
           const name = snapshot.val().name; // Get the name
 
           if (paymentType === "savings") {
@@ -158,7 +162,8 @@ function getPayments() {
     .database()
     .ref(`payments`)
     .orderByChild("paymentTime")
-    .once("value", function (AllRecords) {
+    .get()
+    .then(function (AllRecords) {
       let paymentRecords = [];
 
       AllRecords.forEach(function (CurrentRecord) {

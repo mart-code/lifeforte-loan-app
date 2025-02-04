@@ -39,13 +39,11 @@ function Ready() {
 }
 
 function handleBorrower() {
-  
   if (brwID.value.length == 12) {
     firebase
       .database()
       .ref("borrowers/" + brwID.value)
       .on("value", async function (snapshot) {
-        
         document.getElementById("fname").value = await snapshot.val().name;
         document.getElementById("savings").value = await snapshot.val().savings;
       });
@@ -214,7 +212,8 @@ function getSavings() {
     .database()
     .ref(`payments`)
     .orderByChild("paymentTime")
-    .once("value", function (AllRecords) {
+    .get()
+    .then(function (AllRecords) {
       let paymentRecords = [];
 
       AllRecords.forEach(function (CurrentRecord) {
@@ -243,7 +242,6 @@ function getSavings() {
           });
         }
         // Proceed with processing the data
-        
       });
 
       // Reverse the order of paymentRecords array

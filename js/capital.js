@@ -178,7 +178,7 @@ document.getElementById("capitalBtn").onclick = function (e) {
   let capitalDate = document.getElementById("capitalDate").value;
   let totalCapitalAdded = 0,
     totalCapitalDeduct = 0;
-  capitalRef.once("value", (AllRecords) => {
+  capitalRef.get().then((AllRecords) => {
     AllRecords.forEach((snapshot) => {
       if (snapshot.val().type == "Add" && snapshot.val().date == capitalDate) {
         totalCapitalAdded += parseInt(snapshot.val().amount) || 0;
@@ -193,6 +193,5 @@ document.getElementById("capitalBtn").onclick = function (e) {
     document.getElementById("fixedCapitalValue").innerHTML = parseInt(
       totalCapitalAdded - totalCapitalDeduct
     );
-
   });
 };

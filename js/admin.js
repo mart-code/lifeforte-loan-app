@@ -1,4 +1,6 @@
 window.onload = onLoads;
+document.addEventListener("DOMContentLoaded", onLoads);
+
 document.getElementById("adminName").innerHTML =
   sessionStorage.getItem("userEmail");
 function getRegion() {
@@ -7,13 +9,14 @@ function getRegion() {
   firebase
     .database()
     .ref("regions")
-    .once("value", function (Cuurrent) {
+    .get()
+    .then(function (Cuurrent) {
       Cuurrent.forEach(function (Region) {
         locationValue += `<option value=${Region.val().branchValue}>${
           Region.val().branchName
         }</option>`;
       });
- 
+
       location.innerHTML = locationValue;
       // location.appendChild(locationValue);
     });
@@ -28,7 +31,6 @@ const region = sessionStorage.getItem("region");
 
 //GET ALL DATA
 function SelectAllData() {
-
   var db = firebase.firestore();
 
   // Reference to a specific collection in Firestore

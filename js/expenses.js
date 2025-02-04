@@ -1,5 +1,7 @@
 // Reference to the expenses in the database
 window.onload = updateTable;
+document.addEventListener("DOMContentLoaded", updateTable);
+
 const expensesRef = firebase.database().ref("expenses");
 const branch = sessionStorage.getItem("region");
 const fixedCapitalRef = firebase.database().ref("fixedCapital/" + branch);

@@ -1,5 +1,7 @@
 //LOAD BORROWERS ON DOCUMENT LOAD
 window.onload = SelectAllData;
+document.addEventListener("DOMContentLoaded", SelectAllData);
+
 const region = sessionStorage.getItem("region");
 document.getElementById("adminName").innerHTML =
   sessionStorage.getItem("userEmail");

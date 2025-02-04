@@ -86,7 +86,8 @@ function calculateTotals() {
   resetTotals();
 
   paymentRef
-    .once("value", (AllRecords) => {
+    .get()
+    .then((AllRecords) => {
       AllRecords.forEach((snapshot) => {
         if (
           snapshot.val().branch == branch &&
@@ -111,7 +112,7 @@ function calculateTotals() {
       });
     })
     .then(() => {
-      capitalRef.once("value", (AllRecords) => {
+      capitalRef.get().then((AllRecords) => {
         AllRecords.forEach((snapshot) => {
           // Calculate totals for debit
           if (
@@ -183,7 +184,8 @@ function calculateTotals() {
     })
     .then(() => {
       expensesRef
-        .once("value", (AllRecords) => {
+        .get()
+        .then((AllRecords) => {
           AllRecords.forEach((snapshot) => {
             if (
               snapshot.val().branch == branch &&
@@ -204,7 +206,8 @@ function calculateMonthlyTotals(month, year) {
   resetTotals();
 
   capitalRef
-    .once("value", (allRecords) => {
+    .get()
+    .then((allRecords) => {
       allRecords.forEach((snapshot) => {
         const recordDate = new Date(snapshot.val().date);
         const recordMonth = recordDate.getMonth() + 1; // Month is zero-indexed
@@ -237,7 +240,7 @@ function calculateMonthlyTotals(month, year) {
       // firebase
       //   .database()
       //   .ref("loans")
-      //   .once("value", function (AllRecords) {
+      //   .get().then( function (AllRecords) {
       //     AllRecords.forEach(function (CurrentRecord) {
       //       const recordDate = new Date(CurrentRecord.val().loanStart);
       //       const recordMonth = recordDate.getMonth() + 1; // Month is zero-indexed
@@ -259,7 +262,8 @@ function calculateMonthlyTotals(month, year) {
     .then(() => {
       // Calculate total expenses based on month and year
       expensesRef
-        .once("value", (allRecords) => {
+        .get()
+        .then((allRecords) => {
           allRecords.forEach((snapshot) => {
             const paymentDate = new Date(snapshot.val().paymentDate);
             const paymentMonth = paymentDate.getMonth() + 1; // Month is zero-indexed
@@ -279,7 +283,8 @@ function calculateMonthlyTotals(month, year) {
         })
         .then(() => {
           paymentRef
-            .once("value", (AllRecords) => {
+            .get()
+            .then((AllRecords) => {
               AllRecords.forEach((snapshot) => {
                 const paymentDate = new Date(snapshot.val().paymentDate);
                 const paymentMonth = paymentDate.getMonth() + 1; // Month is zero-indexed
@@ -321,7 +326,8 @@ function calculateMonthlyTotals(month, year) {
 function calculateYearlyTotals(year) {
   resetTotals();
   capitalRef
-    .once("value", (allRecords) => {
+    .get()
+    .then((allRecords) => {
       allRecords.forEach((snapshot) => {
         const recordYear = new Date(snapshot.val().date).getFullYear();
 
@@ -367,7 +373,7 @@ function calculateYearlyTotals(year) {
     })
     .then(() => {
       // Calculate total expenses based on year
-      expensesRef.once("value", (allRecords) => {
+      expensesRef.get().then((allRecords) => {
         allRecords
           .forEach((snapshot) => {
             const paymentYear = new Date(
@@ -379,7 +385,8 @@ function calculateYearlyTotals(year) {
           })
           .then(() => {
             paymentRef
-              .once("value", (AllRecords) => {
+              .get()
+              .then((AllRecords) => {
                 AllRecords.forEach((snapshot) => {
                   const paymentDate = new Date(snapshot.val().paymentDate);
                   const paymentYear = paymentDate.getFullYear();
@@ -420,7 +427,7 @@ function calculateYearlyTotals(year) {
 //   firebase
 //     .database()
 //     .ref("loans")
-//     .once("value", (allRecords) => {
+//     .get().then( (allRecords) => {
 //       allRecords.forEach((snapshot) => {
 //         const loanStart = new Date(snapshot.val().loanStart);
 //         const loanMonth = loanStart.getMonth() + 1; // Month is zero-indexed

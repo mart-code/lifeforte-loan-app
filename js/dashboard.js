@@ -1,4 +1,6 @@
 window.onload = loaded;
+document.addEventListener("DOMContentLoaded", loaded);
+
 document.getElementById("adminName").innerHTML =
   sessionStorage.getItem("userEmail");
 const branch = sessionStorage.getItem("region");

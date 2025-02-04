@@ -1,4 +1,6 @@
 window.onload = onLoad;
+document.addEventListener("DOMContentLoaded", onLoad);
+
 document.getElementById("adminName").innerHTML =
   sessionStorage.getItem("userEmail");
 const region = sessionStorage.getItem("region");
@@ -101,7 +103,8 @@ function getLoanType() {
   firebase
     .database()
     .ref("LoanType")
-    .once("value", function (AllRecords) {
+    .get()
+    .then(function (AllRecords) {
       AllRecords.forEach(function (currentRecord) {
         loanList += `<option value="${currentRecord.val().name}">${
           currentRecord.val().name
@@ -361,7 +364,8 @@ function AddLoanToTable(
     firebase
       .database()
       .ref("loans")
-      .once("value", function (AllRecords) {
+      .get()
+      .then(function (AllRecords) {
         AllRecords.forEach(function (CurrentRecord) {
           if (CurrentRecord.val().borrowerID == borrowerID) {
             document.getElementById("brwid").value =
@@ -665,7 +669,8 @@ function editLoanData(
     capitalRef
       .orderByChild("borrowerID")
       .equalTo(borrowerID)
-      .once("value", function (snapshot) {
+      .get()
+      .then(function (snapshot) {
         let found = false;
         snapshot.forEach(function (childSnapshot) {
           const data = childSnapshot.val();

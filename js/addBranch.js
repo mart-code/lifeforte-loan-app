@@ -1,4 +1,6 @@
 window.onload = SelectAllData;
+document.addEventListener("DOMContentLoaded", SelectAllData);
+
 document.getElementById("adminName").innerHTML =
   sessionStorage.getItem("userEmail");
 document.getElementById("add-branch").addEventListener("click", function (e) {
@@ -6,7 +8,6 @@ document.getElementById("add-branch").addEventListener("click", function (e) {
 
   let branchName = document.getElementById("branchName").value;
   let branchValue = document.getElementById("branchValue").value;
-
 
   firebase
     .database()
@@ -32,7 +33,7 @@ function SelectAllData() {
   var collectionRef = db.ref("regions");
 
   // Fetch data from the collection
-  collectionRef.once("value", function (AllRecords) {
+  collectionRef.get().then(function (AllRecords) {
     AllRecords.forEach((snapshot) => {
       AddItemsToTable(snapshot.key, snapshot.val().branchName);
     });
